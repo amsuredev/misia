@@ -1,6 +1,11 @@
+import asyncio
+
+
 class SympathiesRepository:
+
     def __init__(self, conn):
         self.__connection = conn
+        self.__num_profile_suggestions_create = 10
 
     def like_suggestion(self, superior_id, interior_id):
         with self.__connection.cursor() as cursor:
@@ -34,43 +39,56 @@ class SympathiesRepository:
                            WHERE liker_id = '{superior_id}' and liked_id = '{interior_id}'
                            """)
 
-    def get_pairing_suggestion(self, superior_id):#mvp
-        # check if exists suggestion for superior_id with was_decision = false - on this stage can be omited
-        # create not existing superior suggestion
-        # return created superior suggestion
-        # create suggestion
-        # return created suggestion
-        #
-        pass
+    async def get_pairing_suggestions(self, superior_id):
+        suggestion = await self.next_suggestion(superior_id)
+        if suggestion:
+            return suggestion
+        else:
+            self.create_suggestion(superior_id=superior_id)
+            return await self.next_suggestion(superior_id=superior_id)
 
-    def create_all_possible_suggestions(self, superior_id):
-        # take profiles from your town
-        # no personal suggestion and no mutual (obratnyj like)
-        # create vsem takim suggestionam jebanuc nachuj
-        pass
+    def create_suggestion(self, superior_id):
+        with self.__connection.cursor() as cursor:
+            cursor.execute(f"""
+                           INSERT INTO public.pairing_suggestions (superior_id, interior_id)
+                           SELECT {superior_id} as superior_id, id as interior_id
+                           FROM public.users u
+                           WHERE u.town = (SELECT town FROM public.users WHERE id = {superior_id})
+                           AND u.sex = (SELECT sex_preference FROM public.users WHERE id = {superior_id})
+                           AND u.sex_preference = (SELECT sex FROM public.users WHERE id = {superior_id})
+                           AND u.active = TRUE
+                           AND NOT EXISTS (
+                               SELECT 1
+                               FROM public.pairing_suggestions ps
+                               WHERE ps.superior_id = {superior_id}
+                               AND ps.interior_id = u.id
+                           )
+                           LIMIT {self.__num_profile_suggestions_create}
+                           """)
 
-    def get_pairing_suggestions(self, superior_id, preferable_suggestions_num):
-        pass
-        # check if exist suggestions for this user with was_decision = false
-        # if yes return max (preferable_suggestions_num, available_suggestion_number)
-        # if no create preferable_suggestions_num suggestions
-        # return max (preferable_suggestions_num, available_suggestion_number)
+    async def next_suggestion(self, superior_id):
+        with self.__connection.cursor() as cursor:
+            cursor.execute(f"""
+                           select * from pairing_suggestions
+                           where superior_id = {superior_id} and was_decision = false
+                           limit 1
+                           """)
+            return cursor.fetchone()
 
     def get_matches(self,  superior_id):
         #return list of searchable liked_id from likes
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""
                            Select liked_id, liker_id from likes
-                           where liker_id = 5 or liked_id = 5 and was_decision = true and mutual = true                           
+                           where liker_id = {superior_id} or liked_id = {superior_id} and was_decision = true and mutual = true                           
                            SELECT 
                                CASE 
-                                   WHEN liker_id = 5 THEN liked_id 
-                                   WHEN liked_id = 5 THEN liker_id 
+                                   WHEN liker_id = {superior_id} THEN liked_id 
+                                   WHEN liked_id = {superior_id} THEN liker_id 
                                END as user_id
                            FROM likes
-                           WHERE (liker_id = 5 OR liked_id = 5) AND was_decision = true AND mutual = true;
+                           WHERE (liker_id = {superior_id} OR liked_id = {superior_id}) AND was_decision = true AND mutual = true;
                            """)
-        # здесь не хватает лайкер_айди или лайкд_айди на селекте
 
     def get_liked_profiles(self, superior_id):#те кого я лайкнул, которые не мэтч, те не мутуал лайки из likes
         with self.__connection.cursor() as cursor:
@@ -79,6 +97,3 @@ class SympathiesRepository:
                            from likes 
                            where liker_id = {superior_id} and (was_decision = false or mutual = false)
                            """)
-        pass
-
-#предложка, те кого я лайкнул, мэтчи
