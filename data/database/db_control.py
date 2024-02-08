@@ -8,16 +8,12 @@ class DatabaseConnection:
         self.__database = database
         self.__user = user
         self.__password = password
-        self.__connection = None
+        self.connection = self._connect()
 
-    def connect(self) -> connection:
+    def _connect(self) -> connection:
         conn = psycopg2.connect(host=self.__host,
                                 database=self.__database,
                                 user=self.__user,
                                 password=self.__password)
         conn.autocommit = True
-        self.__connection = conn
-        return self.__connection
-
-
-
+        return conn
