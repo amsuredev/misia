@@ -19,12 +19,12 @@ class MatchmakerRepository:
                            """)
 
     async def get_pairing_suggestion(self, superior_id):
-        suggestion = await self.__next_suggestion(superior_id)
+        suggestion = await self.next_suggestion(superior_id)
         if suggestion:
             return suggestion
         else:
             self.__create_suggestions(superior_id=superior_id)
-            return await self.__next_suggestion(superior_id=superior_id)
+            return await self.next_suggestion(superior_id=superior_id)
 
     def __create_suggestions(self, superior_id) -> None:
         with self.__connection.cursor() as cursor:
@@ -45,7 +45,7 @@ class MatchmakerRepository:
                            LIMIT {self.__num_profile_suggestions_create}
                            """)
 
-    async def __next_suggestion(self, superior_id) -> tuple:
+    async def next_suggestion(self, superior_id) -> tuple:
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""
                            select * from pairing_suggestions
