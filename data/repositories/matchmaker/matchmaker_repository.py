@@ -2,7 +2,7 @@ class MatchmakerRepository:
     def __init__(self, conn, limit_suggestion_num=10):
         self.__connection = conn
 
-    def like_suggestion(self, superior_id, interior_id) -> None:
+    async def like_suggestion(self, superior_id, interior_id) -> None:
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""
                            UPDATE pairing_suggestions
@@ -10,7 +10,7 @@ class MatchmakerRepository:
                            WHERE superior_id = '{superior_id}' and interior_id = '{interior_id}'
                            """)
 
-    def dislike_suggestion(self, superior_id, interior_id) -> None:
+    async def dislike_suggestion(self, superior_id, interior_id) -> None:
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""
                            UPDATE pairing_suggestions
@@ -23,10 +23,10 @@ class MatchmakerRepository:
         if suggestion:
             return suggestion
         else:
-            self.__create_suggestions(superior_id=superior_id)
+            await self.__create_suggestions(superior_id=superior_id)
             return await self.next_suggestion(superior_id=superior_id)
 
-    def __create_suggestions(self, superior_id) -> None:
+    async def __create_suggestions(self, superior_id) -> None:
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""
                            INSERT INTO public.pairing_suggestions (superior_id, interior_id)

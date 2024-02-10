@@ -1,5 +1,5 @@
 class MatchRepository:
-    def like_potential_match(self, superior_id, interior_id) -> None:
+    async def like_potential_match(self, superior_id, interior_id) -> None:
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""
                            UPDATE likes
@@ -7,7 +7,7 @@ class MatchRepository:
                            WHERE liker_id = '{superior_id}' and liked_id = '{interior_id}'
                            """)
 
-    def dislike_potential_match(self, superior_id, interior_id) -> None:
+    async def dislike_potential_match(self, superior_id, interior_id) -> None:
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""
                            UPDATE likes
@@ -15,7 +15,7 @@ class MatchRepository:
                            WHERE liker_id = '{superior_id}' and liked_id = '{interior_id}'
                            """)
 
-    def get_matches(self,  superior_id) -> tuple:
+    async def get_matches(self,  superior_id) -> tuple:
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""
                            Select liked_id, liker_id from likes
@@ -30,7 +30,7 @@ class MatchRepository:
                            """)
             return cursor.fetchall()
 
-    def get_liked_profiles(self, superior_id) -> tuple:
+    async def get_liked_profiles(self, superior_id) -> tuple:
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""
                            select liked_id 
