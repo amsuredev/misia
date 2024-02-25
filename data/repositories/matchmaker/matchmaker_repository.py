@@ -1,7 +1,9 @@
 class MatchmakerRepository:
     def __init__(self, conn, limit_suggestion_num=10):
         self.__connection = conn
+        self.__num_profile_suggestions_create = limit_suggestion_num
 
+    # like could be executed if pairing suggestion exists
     async def like_suggestion(self, superior_id, interior_id) -> None:
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""
@@ -10,6 +12,7 @@ class MatchmakerRepository:
                            WHERE superior_id = '{superior_id}' and interior_id = '{interior_id}'
                            """)
 
+    # dislike could be executed if pairing suggestion exists
     async def dislike_suggestion(self, superior_id, interior_id) -> None:
         with self.__connection.cursor() as cursor:
             cursor.execute(f"""

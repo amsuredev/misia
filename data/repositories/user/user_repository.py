@@ -1,6 +1,8 @@
 from psycopg2._psycopg import connection
 
+
 class UserRepository:
+
     def __init__(self, conn: connection):
         self.__connection = conn
 
@@ -11,7 +13,6 @@ class UserRepository:
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, data
             )
-            return None
 
     async def get(self, chat_id):
         with self.__connection.cursor() as curs:
@@ -28,8 +29,6 @@ class UserRepository:
             SET {column_name} = (%s) 
             WHERE chat_id = '{chat_id}'
             """, data)
-
-        return None
 
     async def delete(self, chat_id):
         with self.__connection.cursor() as curs:
