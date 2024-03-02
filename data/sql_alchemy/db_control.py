@@ -1,8 +1,14 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import Session
 
-from data.sql_alchemy.tables.Base import Base
+from data.sql_alchemy.tables.tables import Base
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
-Base.metadata.create_all(engine)
-session = Session(engine)
+
+def __create_db() -> Engine:
+    engine = create_engine("sqlite:///misia.db", echo=True)
+    Base.metadata.create_all(engine)
+    return engine
+
+
+def get_db_session() -> Session:
+    return Session(__create_db())

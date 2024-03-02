@@ -1,16 +1,10 @@
-# This is a sample Python script.
+from data import get_db_session
+from data.sql_alchemy.tables.tables import User
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    session = get_db_session()
+    alex = User(chat_id="chat_id", first_name="Alex", age=23, sex="M",
+         sex_preference="W", profile_message="babu xochu", town="Warszawa", country="Polska", is_active=True)
+    session.add(alex)
+    session.commit()
+    session.close()
