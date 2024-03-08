@@ -1,4 +1,4 @@
-from data.repositories.image.image_repository import ImageRepository
+from data.legacy.repositories import ImageRepository
 
 
 class ImageService:

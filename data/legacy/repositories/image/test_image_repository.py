@@ -2,8 +2,8 @@ import unittest
 
 from dotenv import load_dotenv
 
-from data.database.db_control import DatabaseConnection
-from data.repositories.image.image_repository import ImageRepository
+from data.legacy.database.db_control import DatabaseConnection
+from data.legacy.repositories.image.image_repository import ImageRepository
 import os
 
 load_dotenv()

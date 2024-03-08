@@ -1,10 +1,9 @@
 import os
 import unittest
 import asyncio
-from unittest.mock import Mock, patch
 
-from data.database.db_control import DatabaseConnection
-from data.repositories.matchmaker.matchmaker_repository import MatchmakerRepository
+from data.legacy.database.db_control import DatabaseConnection
+from data.legacy.repositories.matchmaker.matchmaker_repository import MatchmakerRepository
 from dotenv import load_dotenv
 load_dotenv()
 HOST, DATABASE, USER, PASSWORD = os.getenv("HOST"), os.getenv("DATABASE"), os.getenv("USER"), os.getenv("PASSWORD")
