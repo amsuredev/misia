@@ -36,7 +36,7 @@ class User(Base):
     is_active: Mapped[bool] = mapped_column(Boolean)
     images: Mapped[Optional[List["Image"]]] = relationship(back_populates="user", cascade=USER_CASCADE_MODE)
     likes_as_superior: Mapped[Optional[List["Like"]]] = relationship(back_populates="superior", cascade=USER_CASCADE_MODE)
-    like_as_interior: Mapped[Optional[List["Like"]]] = relationship(back_populates="interior", cascade=USER_CASCADE_MODE)
+    likes_as_interior: Mapped[Optional[List["Like"]]] = relationship(back_populates="interior", cascade=USER_CASCADE_MODE)
 
     def __repr__(self):
         return f"User(id={self.id}, chat_id={self.chat_id}, first_name={self.first_name}"
