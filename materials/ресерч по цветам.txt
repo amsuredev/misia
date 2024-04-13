@@ -1,0 +1,11 @@
+цвета, которые я имею в приложухе по дефолту
+bg_color
+secondary_bg_color
+web_app_set_header_color
+web_app_set_background_color
+
+
+цвета, которые я могу менять
+textColor
+headerColor
+backgroundColor

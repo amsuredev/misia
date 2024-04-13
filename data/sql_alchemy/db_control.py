@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Engine, URL
 from sqlalchemy.orm import Session
 
-from data.sql_alchemy.tables.tables import Base
+from data.sql_alchemy.models import Base
 from sqlalchemy_utils import database_exists, create_database
 import os
 from dotenv import load_dotenv
@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv(".env")
 
 
-def __create_db() -> Engine:
+def __get_engine() -> Engine:
     db_url = URL.create("postgresql+psycopg2",
                         username=os.getenv("USER"),
                         password=os.getenv("PASSWORD"),
@@ -24,4 +24,4 @@ def __create_db() -> Engine:
 
 
 def get_db_session() -> Session:
-    return Session(__create_db())
+    return Session(__get_engine())

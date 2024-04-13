@@ -35,8 +35,8 @@ class User(Base):
     country: Mapped[Optional[str]]
     is_active: Mapped[bool] = mapped_column(Boolean)
     images: Mapped[Optional[List["Image"]]] = relationship(back_populates="user", cascade=USER_CASCADE_MODE)
-    likes_as_superior: Mapped[Optional[List["Like"]]] = relationship(back_populates="superior", cascade=USER_CASCADE_MODE)
-    likes_as_interior: Mapped[Optional[List["Like"]]] = relationship(back_populates="interior", cascade=USER_CASCADE_MODE)
+    likes_as_superior: Mapped[Optional[List["Like"]]] = relationship("Like", back_populates="superior", foreign_keys="Like.superior_id", cascade=USER_CASCADE_MODE)
+    likes_as_interior: Mapped[Optional[List["Like"]]] = relationship("Like", back_populates="interior", foreign_keys="Like.interior_id", cascade=USER_CASCADE_MODE)
 
     def __repr__(self):
         return f"User(id={self.id}, chat_id={self.chat_id}, first_name={self.first_name}"
@@ -45,10 +45,10 @@ class User(Base):
 class Like(Base):
     __tablename__ = "like"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    superior_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    superior: Mapped["User"] = relationship(back_populates="likes_as_superior")
-    interior_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    interior: Mapped["User"] = relationship(back_populates="like_as_interior")
+    superior_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
+    superior: Mapped["User"] = relationship("User", foreign_keys=[superior_id], back_populates="likes_as_superior")
+    interior_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"))
+    interior: Mapped["User"] = relationship("User", foreign_keys=[interior_id], back_populates="likes_as_interior")
     is_executed: Mapped[bool] = mapped_column(Boolean)
     is_mutual: Mapped[Optional[bool]] = mapped_column(Boolean)
 

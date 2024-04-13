@@ -1,5 +1,4 @@
 from data import get_db_session
-from data.sql_alchemy.tables.tables import User
 
 if __name__ == '__main__':
     session = get_db_session()
