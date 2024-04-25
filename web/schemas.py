@@ -24,11 +24,11 @@ class LikeBase(BaseModel):
     is_mutual: bool
 
 
-class LikeCreate(BaseModel):
+class LikeUpdate(LikeBase):
     pass
 
 
-class Like(BaseModel):
+class Like(LikeBase):
     id: int
 
     class Config:
