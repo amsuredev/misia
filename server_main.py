@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 import repository
 from data import get_db_session
-from web.schemas import User, UserCreate, Like
+from data.web.schemas import User, UserCreate, Like
 
 app = FastAPI()
 

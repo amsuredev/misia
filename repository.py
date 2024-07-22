@@ -3,7 +3,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 from data.sql_alchemy import models
 from data.sql_alchemy.models import User, Like
-from web import schemas
+from data.web import schemas
 from random import choice
 
 
