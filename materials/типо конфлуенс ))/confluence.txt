@@ -1,2 +1,0 @@
-orm + server
-fast api + sqlalchemy
